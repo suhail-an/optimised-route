@@ -136,7 +136,7 @@ async def calculate_route(request: RouteRequest):
         "total_gallons": result.get("total_gallons", 0),
         "total_fuel_cost": result.get("total_fuel_cost", 0),
         "average_price_per_gallon": result.get("average_price_per_gallon", 0),
-        "map_url": f"/route/map?start={request.start}&finish={request.finish}"
+        "map_url": "/route/map"  # Use POST with same request body
     }
 
 
@@ -157,14 +157,17 @@ async def get_stations(
     }
 
 
-@app.get("/route/map", response_class=HTMLResponse)
-async def get_route_map(
-    start: str = Query(..., description="Starting location"),
-    finish: str = Query(..., description="Destination")
-):
+@app.post("/route/map", response_class=HTMLResponse)
+async def get_route_map(request: RouteRequest):
     """
     Get an interactive map showing the route and optimal fuel stops.
+
+    - **start**: Starting location (e.g., "Los Angeles, CA")
+    - **finish**: Destination location
     """
+    start = request.start
+    finish = request.finish
+
     # Geocode locations
     start_coords = geocode_address(start)
     if not start_coords:

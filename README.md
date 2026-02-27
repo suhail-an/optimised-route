@@ -32,9 +32,11 @@ curl -X POST "http://localhost:8000/route" \
   -d '{"start": "New York, NY", "finish": "Los Angeles, CA"}'
 ```
 
-**View interactive map (Browser):**
-```
-http://localhost:8000/route/map?start=New%20York,%20NY&finish=Los%20Angeles,%20CA
+**View interactive map (HTML):**
+```bash
+curl -X POST "http://localhost:8000/route/map" \
+  -H "Content-Type: application/json" \
+  -d '{"start": "New York, NY", "finish": "Los Angeles, CA"}' > map.html
 ```
 
 ## API Endpoints
@@ -46,9 +48,7 @@ Calculate optimal fuel stops for a route.
 ```json
 {
   "start": "New York, NY",
-  "finish": "Los Angeles, CA",
-  "max_range_miles": 500,
-  "mpg": 10
+  "finish": "Los Angeles, CA"
 }
 ```
 
@@ -74,12 +74,16 @@ Calculate optimal fuel stops for a route.
 }
 ```
 
-### `GET /route/map`
+### `POST /route/map`
 Returns an interactive HTML map showing the route and fuel stops.
 
-**Parameters:**
-- `start` (required): Starting location
-- `finish` (required): Destination
+**Request Body:**
+```json
+{
+  "start": "New York, NY",
+  "finish": "Los Angeles, CA"
+}
+```
 
 ### `GET /stations`
 List fuel stations with optional filtering.
